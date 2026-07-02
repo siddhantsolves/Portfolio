@@ -6,13 +6,13 @@
 
 @font-face{
   font-family: "philosopher";
-  src: url("fonts/Philosopher/Philosopher-Regular.ttf");
+  src: url("fonts/Philosopher-Regular.ttf");
   font-weight: normal;
   font-style: normal;
 }
 @font-face{
   font-family: "CNZL-D";
-  src: url("fonts/Cinzel_Decorative/CinzelDecorative-Regular.ttf");
+  src: url("fonts/CinzelDecorative-Regular.ttf");
   font-weight: normal;
   font-style: normal;
 }
