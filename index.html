@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOID</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Transparent overlay for your 3D Car Model -->
+    <div id="container3D"></div>
+
+    <img class="image-gradient" src="items/gradient.png" alt="gradient">
+    <div class="layer-blur"></div>
+    
+    <div class="container">
+        <header>
+            <h1 class="logo">
+                <div class="shine">VOID</div>
+            </h1>
+            
+            <nav>
+                <a href="#intro">INTRO</a>
+                <a href="#about">ABOUT</a>
+                <a href="#skills">SKILLS</a>
+                <a href="#goal">GOAL</a>
+                <a href="#contact">CONTACT</a>
+            </nav>
+            
+            <a href="#intro" style="text-decoration:none;">
+                <button class="nav-btn">
+                    <span>EXPLORE</span>
+                </button>
+            </a>
+        </header>
+        
+        <!-- Section 0: Home Landing Page -->
+        <main id="home">
+            <div class="content">
+                <div class="tag-box">
+                    <div class="tag"><b>WELCOME</b></div>
+                </div>
+                
+                <h1>HELLO, This is <br><div class="shine" id="siddhant-txt">SIDDHANT</div></h1>
+                
+                <p class="description">
+                    A dreamer disguised as a programmer, finding poetry in moonlit skies and lines of code alike. I believe ideas, like stars, are meant to shine, and I quietly chase the dream of building technology that leaves the world a little better than I found it.
+                </p>
+                
+                <a href="#intro" class="anc-go">
+                    <button class="btn-go">Dive in and EXPLORE &gt;</button>
+                </a>
+            </div>
+
+            <div class="cube-wrapper">
+                <div class="cube">
+                    <div style="--x:-1; --y:0;">
+                        <span style="--i:3;"></span><span style="--i:2;"></span><span style="--i:1;"></span>
+                    </div>
+                    <div style="--x:0; --y:0;">
+                        <span style="--i:3;"></span><span style="--i:2;"></span><span style="--i:1;"></span>
+                    </div>
+                    <div style="--x:1; --y:0;">
+                        <span style="--i:3;"></span><span style="--i:2;"></span><span style="--i:1;"></span>
+                    </div>
+                </div>
+                <div class="cube">
+                    <div style="--x:-1; --y:0;">
+                        <span style="--i:3;"></span><span style="--i:2;"></span><span style="--i:1;"></span>
+                    </div>
+                    <div style="--x:0; --y:0;">
+                        <span style="--i:3;"></span><span style="--i:2;"></span><span style="--i:1;"></span>
+                    </div>
+                    <div style="--x:1; --y:0;">
+                        <span style="--i:3;"></span><span style="--i:2;"></span><span style="--i:1;"></span>
+                    </div>
+                </div>
+                <div class="cube">
+                    <div style="--x:-1; --y:0;">
+                        <span style="--i:3;"></span><span style="--i:2;"></span><span style="--i:1;"></span>
+                    </div>
+                    <div style="--x:0; --y:0;">
+                        <span style="--i:3;"></span><span style="--i:2;"></span><span style="--i:1;"></span>
+                    </div>
+                    <div style="--x:1; --y:0;">
+                        <span style="--i:3;"></span><span style="--i:2;"></span><span style="--i:1;"></span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Horizontal Pinned Container (Intro -> Skills -> Goal) -->
+        <div id="pin-container">
+            <div id="horizontal-scroll">
+                
+                <!-- Section 1: Intro -->
+                <section class="portfolio-section" id="intro">
+                    <div class="intro-halo"></div>
+                    <div class="intro-floor-glow"></div>
+
+                    <div class="intro-manifesto">
+                        <p>"WE DON'T BUILD FOR THE WORLD AS IT IS.</p>
+                        <p>WE BUILD FOR THE WORLD IT <span class="highlight-red">COULD BE"</span>.</p>
+                        
+                        <div class="red-line1"></div>
+                        
+                        <p class="bullets">FUELED BY DESIGN,</p>
+                        <p class="bullets">DRIVEN BY PURPOSE.</p>
+                        <p class="bullets">BUILT TO <span class="highlight-red">INSPIRE CHANGE</span>.</p>
+                        
+                        <div class="red-line2"></div>
+                        
+                        <p class="bullets">THEY<br>CALL<br>ME--</p>
+                    </div>
+
+                    <div class="backdrop-title">SIDDHANT</div>
+
+                    <div class="intro-footer">
+                        <p>I DESIGN IMMERSIVE <span class="highlight-red">DIGITAL</span> EXPERIENCES</p>
+                        <div class="red-line tiny"></div>
+                    </div>
+                </section>
+                
+                <!-- Section 2: My Story -->
+                <section class="portfolio-section" id="my-story">
+                    <div class="story-card tilt-card">
+                        <div class="story-badge">01</div>
+                        <p class="story-subtitle">___________________________________________________________</p>
+                        <h2 class="story-title">My Story</h2>
+                        
+                        <div class="story-divider"></div>
+                        
+                        <p class="story-desc">
+                            It all started with curiosity. I was fascinated by how websites worked, how lines of code could turn into real, interactive experiences.
+                        </p>
+                        <p class="story-desc">
+                            What began as tinkering soon turned into a passion. I spent countless hours learning, experimenting, failing, and building again—driven by the desire to create something meaningful.
+                        </p>
+                        
+                        <div class="timeline-container">
+                            <div class="timeline-line"></div>
+                            <div class="timeline-row">
+                                <div class="timeline-node">
+                                    <div class="node-dot"></div>
+                                    <span class="node-year">2019</span>
+                                    <p class="node-text">Started my coding journey</p>
+                                </div>
+                                <div class="timeline-node">
+                                    <div class="node-dot"></div>
+                                    <span class="node-year">2020</span>
+                                    <p class="node-text">Fell in love with frontend dev</p>
+                                </div>
+                                <div class="timeline-node">
+                                    <div class="node-dot"></div>
+                                    <span class="node-year">2021</span>
+                                    <p class="node-text">Explored backend & full-stack</p>
+                                </div>
+                                <div class="timeline-node">
+                                    <div class="node-dot"></div>
+                                    <span class="node-year">2022+</span>
+                                    <p class="node-text">Building, learning, and creating impact</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Section 3: Why I Build -->
+                <section class="portfolio-section" id="why-i-build">
+                    <div class="why-build-container">
+                        <div class="why-build-card tilt-card">
+                            <div class="build-header">
+                                <div class="build-badge">03</div>
+                                <span class="build-tagline">WHY I BUILD</span>
+                            </div>
+                            
+                            <h2 class="build-title">Why I Build</h2>
+                            <div class="orange-divider-line"></div>
+                            
+                            <p class="build-intro-desc">
+                                I build to solve problems, create impact, and make complex things feel simple and beautiful.
+                            </p>
+                            
+                            <div class="build-features">
+                                <div class="build-feature-item">
+                                    <div class="feature-icon-box">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="feature-content">
+                                        <h3>I build to solve problems.</h3>
+                                        <p>I enjoy turning ideas into solutions that make people's lives easier.</p>
+                                    </div>
+                                </div>
+
+                                <div class="build-feature-item">
+                                    <div class="feature-icon-box">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                                        </svg>
+                                    </div>
+                                    <div class="feature-content">
+                                        <h3>I build to create impact.</h3>
+                                        <p>Great design and clean code can change how people experience the web.</p>
+                                    </div>
+                                </div>
+
+                                <div class="build-feature-item">
+                                    <div class="feature-icon-box">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 2L15 9L22 12L15 15L12 22L9 15L2 12L9 9L12 2Z"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="feature-content">
+                                        <h3>I build to keep growing.</h3>
+                                        <p>Every project is a new challenge and a chance to become better.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="why-build-quote-card tilt-card">
+                            <div class="quote-icon">“</div>
+                            <div class="quote-text">
+                                <p class="quote-main">I don't just write code.</p>
+                                <p class="quote-sub">I craft experiences.</p>
+                            </div>
+                            <div class="quote-glow-dot"></div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Section 4: How I Think -->
+<section class="portfolio-section" id="how-i-think">
+    <div class="think-container">
+        <div class="think-card tilt-card">
+            <div class="think-header">
+                <div class="think-badge">04</div>
+                <span class="think-tagline">HOW I THINK</span>
+            </div>
+            
+            <h2 class="think-title">How I Think</h2>
+            <div class="purple-divider-line"></div>
+            
+            <p class="think-intro-desc">
+                I believe great digital experiences are built on clarity, purpose, and emotion. Every interaction should feel intuitive, every detail should have a reason.
+            </p>
+            
+            <div class="think-pillars">
+                <!-- Pillar 1: User First -->
+                <div class="pillar-item">
+                    <div class="pillar-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <circle cx="12" cy="12" r="6"></circle>
+                            <circle cx="12" cy="12" r="2"></circle>
+                        </svg>
+                    </div>
+                    <h3 class="pillar-title">USER FIRST</h3>
+                    <p class="pillar-desc">I start with understanding people, their needs, and their goals.</p>
+                </div>
+
+                <!-- Pillar 2: Simplicity -->
+                <div class="pillar-item">
+                    <div class="pillar-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
+                    </div>
+                    <h3 class="pillar-title">SIMPLICITY</h3>
+                    <p class="pillar-desc">Clean design and clean code create powerful experiences.</p>
+                </div>
+
+                <!-- Pillar 3: Intentional -->
+                <div class="pillar-item">
+                    <div class="pillar-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 18 22 12 16 6"></polyline>
+                            <polyline points="8 6 2 12 8 18"></polyline>
+                        </svg>
+                    </div>
+                    <h3 class="pillar-title">INTENTIONAL</h3>
+                    <p class="pillar-desc">Every line of code and every animation serves a purpose.</p>
+                </div>
+
+                <!-- Pillar 4: Continuously Evolving -->
+                <div class="pillar-item">
+                    <div class="pillar-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path>
+                        </svg>
+                    </div>
+                    <h3 class="pillar-title">CONTINUOUSLY EVOLVING</h3>
+                    <p class="pillar-desc">I learn, iterate, and refine—never stop leveling up.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+                
+                <!-- Section 5: Where I'm Headed -->
+<section class="portfolio-section" id="where-headed">
+    <div class="headed-container">
+        <!-- Main Card on the left -->
+        <div class="headed-card tilt-card">
+            <div class="headed-header">
+                <div class="headed-badge">06</div>
+                <span class="headed-tagline">WHERE I'M HEADED</span>
+            </div>
+            
+            <h2 class="headed-title">Where I'm Headed</h2>
+            <div class="red-divider-line"></div>
+            
+            <p class="headed-intro-desc">
+                I'm constantly learning and building towards a future where I can create meaningful digital products that make a real impact.
+            </p>
+            
+            <!-- Three Columns Grid -->
+            <div class="headed-pillars">
+                <!-- Column 1: Keep Learning -->
+                <div class="headed-pillar-item">
+                    <div class="headed-pillar-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                            <line x1="4" y1="22" x2="4" y2="15"></line>
+                        </svg>
+                    </div>
+                    <h3 class="headed-pillar-title">KEEP LEARNING</h3>
+                    <p class="headed-pillar-desc">New technologies, better solutions, every single day.</p>
+                </div>
+
+                <!-- Column 2: Build Impactful Products -->
+                <div class="headed-pillar-item">
+                    <div class="headed-pillar-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <path d="M16 10a4 4 0 0 1-8 0"></path>
+                        </svg>
+                    </div>
+                    <h3 class="headed-pillar-title">BUILD IMPACTFUL PRODUCTS</h3>
+                    <p class="headed-pillar-desc">I want to create products that solve real problems and help real people.</p>
+                </div>
+
+                <!-- Column 3: Work Globally -->
+                <div class="headed-pillar-item">
+                    <div class="headed-pillar-icon-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="headed-pillar-title">WORK GLOBALLY</h3>
+                    <p class="headed-pillar-desc">Collaborate with amazing people and build something that lasts.</p>
+                </div>
+            </div>
+
+            <!-- Wide goals box at the bottom of the main card -->
+            <div class="headed-goals-box">
+                <div class="goals-icon-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                </div>
+                <div class="goals-text">
+                    Big goals. Clear vision. Consistent action. <span class="highlight-red">That's the path I'm on.</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Quote Card on the bottom right -->
+        <div class="headed-quote-card tilt-card">
+            <div class="headed-quote-icon">“</div>
+            <div class="headed-quote-text">
+                <p class="headed-quote-main">The best way to predict the future is to build it.</p>
+            </div>
+            <div class="headed-quote-glow-dot"></div>
+        </div>
+    </div>
+</section>
+                
+                <!-- Section 6: Skills -->
+                <section class="portfolio-section" id="skills">
+                    <div class="section-content left">
+                        <h2>06. SKILLS</h2>
+                        <p>JavaScript, Three.js, CSS Animations, and UI/UX layouts. Creating interactive environments is what I specialize in.</p>
+                    </div>
+                </section>
+
+                <!-- Section 7: Goal -->
+                <section class="portfolio-section" id="goal">
+                    <div class="section-content right">
+                        <h2>07. THE GOAL</h2>
+                        <p>To continue building clean, memorable, and immersive web designs that combine design theory with code.</p>
+                    </div>
+                </section>
+                
+            </div>
+        </div>
+
+        <!-- Section 8: Contact -->
+        <section class="portfolio-section" id="contact">
+            <div class="section-content left">
+                <h2>08. CONTACT</h2>
+                <p>Let's collaborate on your next interactive project. Drop me an email or find me on my social channels.</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- 3D LIBRARIES (Imported via CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@r128/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Custom Logic -->
+    <script src="app.js"></script>
+</body>
+</html>
