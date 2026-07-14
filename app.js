@@ -159,7 +159,7 @@ let activeAction = null;
 const clock = new THREE.Clock();
 
 const loader = new THREE.GLTFLoader();
-const modelFile = 'my_car1.glb'; 
+const modelFile = 'my_car.glb'; 
 
 loader.load(
     modelFile, 
@@ -497,13 +497,9 @@ function resetIntroElements() {
     introSequenceTriggered = false;
     if (introTimeline) introTimeline.kill();
 
-    gsap.killTweensOf('.backdrop-title');
-    gsap.killTweensOf('.intro-halo');
     gsap.killTweensOf('.typewriter-char');
     gsap.killTweensOf('.red-line1, .red-line2, .intro-footer .red-line');
 
-    gsap.set('.backdrop-title', { opacity: 0, top: "54%" }); 
-    gsap.set('.intro-halo', { opacity: 0 });                 
     gsap.set('.typewriter-char', { opacity: 0 });
     gsap.set('.red-line1, .red-line2, .intro-footer .red-line', { opacity: 0, scaleX: 0 });
 
@@ -520,8 +516,6 @@ function resetIntroElements() {
 function runIntroSequence(activeData) {
     introTimeline = gsap.timeline();
 
-    gsap.set('.backdrop-title', { opacity: 0, top: "54%" });
-    gsap.set('.intro-halo', { opacity: 0 });
     gsap.set('#container3D', { opacity: 0 });
 
     const manifestoChildren = document.querySelectorAll('.intro-manifesto > *');
@@ -563,12 +557,6 @@ function runIntroSequence(activeData) {
         }
     });
 
-    introTimeline.to('.intro-halo', {
-        opacity: 1,
-        duration: 0.8,
-        ease: "power2.out"
-    });
-
     introTimeline.add(() => {
         const startCarTransition = () => {
             if (!car) {
@@ -608,13 +596,6 @@ function runIntroSequence(activeData) {
     });
 
     introTimeline.set({}, {}, "+=1.4");
-
-    introTimeline.to('.backdrop-title', {
-        opacity: 1,
-        top: "50%",
-        duration: 1.8,
-        ease: "power2.out"
-    });
 
     footerChildren.forEach(child => {
         if (child.tagName === 'P') {
