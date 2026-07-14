@@ -65,10 +65,14 @@ body {
 
 /* Header & Nav */
 header {
+    position: absolute;
+    top: 0;
+    left: 2rem;
+    right: 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 5rem;
+    padding: 1rem 5rem;
     z-index: 999;
 }
 
@@ -179,8 +183,10 @@ main {
     flex-direction: row;
     align-items: center;
     justify-content: space-between; 
-    min-height: calc(90vh - 6rem);
+    min-height: 100vh;
     padding-right: 27%;
+    padding-top: 5%;
+    position: relative;
 }
 
 .content {
@@ -401,45 +407,13 @@ html {
 #intro {
     position: relative;
     overflow: hidden;
-    background: transparent;
+    background: url('items/intro-bg.png') no-repeat center center;
+    background-size: cover;
     width: 100%;
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.intro-halo {
-    position: absolute;
-    top: 85%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 130vh;
-    height: 130vh;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    filter: drop-shadow(0 0 17px rgba(255, 13, 25, 0.7)); 
-}
-.intro-halo::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    padding: 5px; 
-    background: conic-gradient(from 0deg, #ff0d19, #990d19, #ffffff, #990d19, #ff0d19);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    animation: rotateHalo 3s linear infinite;
-}
-@keyframes rotateHalo {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
 }
 
 .intro-floor-glow {
@@ -493,33 +467,6 @@ html {
     margin: 1.2rem 0;
 }
 
-.backdrop-title {
-    position: absolute;
-    top: 50%; 
-    right: 50%;
-    transform: translate(50%, -50%);
-    text-transform: uppercase;
-    font-family: Black-ops;
-    font-size: 11em;
-    font-weight: 500;
-    color: #f5f5f5;
-    text-shadow: 1px 1px 1px #919191,
-        1px 2px 1px #919191,
-        1px 3px 1px #919191,
-        1px 4px 1px #919191,
-        1px 5px 1px #919191,
-        1px 6px 1px #919191,
-        1px 7px 1px #919191,
-        1px 8px 1px #919191,
-        1px 9px 1px #919191,
-        1px 10px 1px #919191,
-    1px 18px 6px rgba(16,16,16,0.4),
-    1px 22px 10px rgba(16,16,16,0.2),
-    1px 25px 35px rgba(16,16,16,0.2),
-    1px 30px 60px rgba(16,16,16,0.4);
-    z-index: 5;
-}
-
 .intro-footer {
     position: absolute;
     bottom: 3.8%;
@@ -546,7 +493,6 @@ html {
     margin: 0 auto;
 }
 
-.intro-halo, .backdrop-title, 
 .intro-manifesto p, .intro-manifesto .red-line1, .intro-manifesto .red-line2,
 .intro-footer p, .intro-footer .red-line {
     opacity: 0;
@@ -948,7 +894,7 @@ html {
    ========================================= */
 @media (max-width: 1024px) {
     header {
-        padding: 1rem 2rem;
+        padding: 1.5rem 2rem;
     }
     main {
         padding-right: 5%;
@@ -977,6 +923,10 @@ html {
 
 @media (max-width: 768px) {
     header {
+        position: absolute;
+        left: 1rem;
+        right: 1rem;
+        top: 0;
         flex-direction: column;
         gap: 1.5rem;
         padding: 1.5rem 1rem;
@@ -990,8 +940,10 @@ html {
     main {
         flex-direction: column;
         padding-right: 0;
+        padding-top: 14rem; /* Adds padding to clear the stacked floating header */
         padding-bottom: 5rem;
         text-align: center;
+        min-height: 100vh;
     }
     
     .content {
@@ -1019,13 +971,6 @@ html {
         margin: 0; 
     }
 
-    .intro-halo {
-        width: 320px;
-        height: 320px;
-    }
-    .backdrop-title {
-        font-size: 15vw;
-    }
     .intro-manifesto {
         top: 6%;
         left: 5%;
