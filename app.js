@@ -159,7 +159,7 @@ let activeAction = null;
 const clock = new THREE.Clock();
 
 const loader = new THREE.GLTFLoader();
-const modelFile = 'my_car1.glb'; 
+const modelFile = 'my_car.glb'; 
 
 loader.load(
     modelFile, 
