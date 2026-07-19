@@ -494,9 +494,11 @@ function resetIntroElements() {
 
     gsap.killTweensOf('.typewriter-char');
     gsap.killTweensOf('.red-line1, .red-line2, .intro-footer .red-line');
+    gsap.killTweensOf('.intro-overlay-image'); // Resets active transitions on the overlay
 
     gsap.set('.typewriter-char', { opacity: 0 });
     gsap.set('.red-line1, .red-line2, .intro-footer .red-line', { opacity: 0, scaleX: 0 });
+    gsap.set('.intro-overlay-image', { opacity: 0, y: 40 }); // Hides character image & translates back down
 
     const children = document.querySelectorAll('.intro-manifesto > *, .intro-footer > *');
     children.forEach(child => {
@@ -550,6 +552,14 @@ function runIntroSequence(activeData) {
                 { scaleX: 1, duration: 0.3, ease: "power2.out" }
             );
         }
+    });
+
+    // Fade overlay image smoothly from bottom to top once the "...THEY CALL ME--" typewriter ends
+    introTimeline.to('.intro-overlay-image', {
+        opacity: 1,
+        y: 0,
+        duration: 1.5,
+        ease: "power2.out"
     });
 
     introTimeline.add(() => {
@@ -615,6 +625,9 @@ function runIntroSequence(activeData) {
 function playCarDriftDirectly(activeData) {
     gsap.to('#container3D', { opacity: 1, duration: 1, ease: "power1.out" });
     gsap.to(car.scale, { x: 0.9, y: 0.9, z: 0.9, duration: 1.5, ease: "power1.out" });
+
+    // Instantly slide up the overlay to correct layout configurations if scroll sequences are bypassed
+    gsap.to('.intro-overlay-image', { opacity: 1, y: 0, duration: 0.5, ease: "power1.out" });
 
     gsap.to(car.position, {
         x: activeData.position.x,
