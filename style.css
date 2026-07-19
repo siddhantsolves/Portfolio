@@ -399,21 +399,7 @@ html {
     height: 250px;
     background: radial-gradient(ellipse at bottom, rgba(255, 13, 25, 0.25) 0%, rgba(255, 13, 25, 0) 70%);
     pointer-events: none;
-    z-index: 3; /* Elevated above character image layout so floor lighting washes over logically */
-}
-
-/* Character Overlay style sitting beneath context but on top of landscape background */
-.intro-overlay-image {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 2;
-    pointer-events: none;
-    opacity: 0;
-    transform: translateY(40px); /* Pushed slightly downward for sequence entrances */
+    z-index: 1;
 }
 
 .intro-manifesto {
@@ -1725,4 +1711,125 @@ html {
         font-size: 1.1rem;
         line-height: 1.6;
     }
+}
+
+/* =========================================
+   GLOWING WebGL LOADING SCREEN STYLING
+   ========================================= */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #09090d;
+    z-index: 999999; /* Higher than everything else, including navigation */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+#loader-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.loader-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 500px;
+    padding: 2rem;
+    width: 90%;
+}
+
+.loader-title {
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: 0.35em;
+    color: #e7e7e7;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
+}
+
+.loader-progress-bar-container {
+    width: 280px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.8rem;
+}
+
+.loader-progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #ff0d19 0%, #a855f7 100%);
+    box-shadow: 0 0 12px rgba(255, 13, 25, 0.6);
+}
+
+.loader-percentage {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #ff0d19;
+    letter-spacing: 0.1em;
+    margin-bottom: 2.5rem;
+    text-shadow: 0 0 8px rgba(255, 13, 25, 0.3);
+}
+
+.loader-rules-container {
+    opacity: 0;
+    transform: translateY(25px);
+    background: rgba(13, 13, 18, 0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 16px;
+    padding: 1.8rem 2rem;
+    width: 100%;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+.rule-title {
+    font-family: "CNZL-D", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #ff4d55;
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+    text-shadow: 0 0 8px rgba(255, 77, 85, 0.25);
+    text-align: center;
+}
+
+.rule-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+
+.rule-item {
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: #94a3b8;
+    margin-bottom: 0.7rem;
+    opacity: 0;
+    transform: translateX(-15px);
+    font-weight: 500;
+}
+
+.rule-item:last-child {
+    margin-bottom: 0;
 }
