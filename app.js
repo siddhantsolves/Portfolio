@@ -8,14 +8,8 @@ const arrPositionModel = [
     { id: 'my-story', position: { x: 1.4, y: -0.84, z: 3 }, rotation: { x: 0.12, y: -2.8, z: 0.03 }, animation: 'LeftDoorAction' }, 
     { id: 'why-i-build', position: { x: 1.4, y: -0.45, z: 3 }, rotation: { x: 0.15, y: -1, z: 0.03 }, animation: 'RearDoorAction' },  
     { id: 'how-i-think', position: { x: 2.2, y: -0.55, z: 1.8 }, rotation: { x: 0.08, y: -0.4, z: 0 }, animation: 'FrontDoorWindshieldAction' },
-    
-    // Aligned to the perspective lanes of the cyberpunk wet street:
     { id: 'where-headed', position: { x: 2.2, y: -0.65, z: 1.4 }, rotation: { x: 0.08, y: -3, z: 0 }, animation: 'AllActions' },
-    
-    // Note: The car and canvas are removed during skills, goal, and contact sections.
-    { id: 'skills', position: { x: 1.5, y: -0.5, z: -3 }, rotation: { x: -0.1, y: -1.0, z: -0.1 }, animation: 'AllActions' },
-    { id: 'goal', position: { x: -1.5, y: -0.5, z: -2 }, rotation: { x: 0.2, y: 0.8, z: 0 }, animation: 'AllActions' },
-    { id: 'contact', position: { x: 1.5, y: -0.5, z: 0 }, rotation: { x: 0, y: -2.0, z: 0 }, animation: 'AllActions' }
+    { id: 'skills', position: { x: 1.5, y: -0.5, z: -3 }, rotation: { x: -0.1, y: -1.0, z: -0.1 }, animation: 'AllActions' }
 ];
 
 // --- STEP 2: Three.js Configuration ---
@@ -400,7 +394,7 @@ panels.forEach((panel, i) => {
 // Dynamic Snapping for Normal Linear Page Sections
 function initDynamicVerticalSnapping() {
     const mainSections = document.querySelectorAll(
-        '.container > main, .container > #pin-container, .container > .portfolio-section'
+        '.container > main, .container > #pin-container'
     );
     
     mainSections.forEach((sec) => {
@@ -491,6 +485,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (footer) prepareTypewriter(footer);
     resetIntroElements();
     initGlobalTiltEffect(); // Triggers global interactive card tracking
+    initInteractiveClouds(); // Handles tap triggers on mobile environments
 });
 
 function resetIntroElements() {
@@ -669,6 +664,14 @@ function modelMove() {
             loopTimeoutId = null;
         }
 
+        // Resets the parting state when moving away from the Skills viewport
+        if (currentSection !== 'skills') {
+            const skillsEl = document.getElementById('skills');
+            if (skillsEl) {
+                skillsEl.classList.remove('parted');
+            }
+        }
+
         const activeData = arrPositionModel.find(val => val.id === currentSection);
 
         if (activeData) {
@@ -680,34 +683,33 @@ function modelMove() {
             isAccelerating = false;
 
             // GPU & Canvas management for sections that do not require 3D rendering
-            const disabledSections = ['skills', 'goal', 'contact'];
+            const disabledSections = ['home', 'skills'];
             const shouldDisable3D = disabledSections.includes(currentSection);
 
             if (shouldDisable3D) {
                 gsap.to('#container3D', { 
                     opacity: 0, 
-                    duration: 0.8, 
+                    duration: 1, 
                     ease: "power1.out",
                     onComplete: () => {
-                        // Confirms index section is still off-screen before disabling display
+                        // Suspend loop calculation cycles when user is idle in non-render zones
                         if (disabledSections.includes(currentSection)) {
-                            document.getElementById('container3D').style.display = 'none';
                             isRendererRunning = false;
                         }
                     }
                 });
+                if (currentSection === 'home') {
+                    resetIntroElements();
+                }
             } else {
-                // Re-enables the rendering processes
+                // Re-enables the rendering processes immediately upon scroll
                 if (!isRendererRunning) {
                     isRendererRunning = true;
-                    clock.getDelta(); // Clears delta calculation gap to prevent sudden animation jumps
+                    clock.getDelta(); // Clears delta gap to prevent viewport rendering jumps
                 }
                 document.getElementById('container3D').style.display = 'block';
 
-                if (currentSection === 'home') {
-                    gsap.to('#container3D', { opacity: 0, duration: 1, ease: "power1.out" });
-                    resetIntroElements(); 
-                } else if (currentSection !== 'intro') {
+                if (currentSection !== 'intro') {
                     gsap.to('#container3D', { opacity: 1, duration: 1, ease: "power1.out" });
                 }
 
@@ -841,6 +843,19 @@ function initGlobalTiltEffect() {
             card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
         });
     });
+}
+
+// --- STEP 10: Touch interactions fallback for Mobile Devices ---
+function initInteractiveClouds() {
+    const skillsSection = document.getElementById('skills');
+    if (skillsSection) {
+        skillsSection.addEventListener('click', () => {
+            skillsSection.classList.add('parted');
+        });
+        skillsSection.addEventListener('touchstart', () => {
+            skillsSection.classList.add('parted');
+        }, { passive: true });
+    }
 }
 
 // Handle resizing safely
