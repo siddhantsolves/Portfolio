@@ -12,6 +12,135 @@ const arrPositionModel = [
     { id: 'skills', position: { x: 1.5, y: -0.5, z: -3 }, rotation: { x: -0.1, y: -1.0, z: -0.1 }, animation: 'AllActions' }
 ];
 
+// --- STEP 1.5: Isolated WebGL Loader Screen Loop ---
+let loaderAnimationId;
+let loaderRenderer, loaderScene, loaderCamera, loaderMesh, loaderMeshOuter;
+
+function initLoaderWebGL() {
+    const canvas = document.getElementById('loader-canvas');
+    if (!canvas) return;
+
+    loaderScene = new THREE.Scene();
+    loaderCamera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.1, 100);
+    loaderCamera.position.z = 7;
+
+    loaderRenderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    loaderRenderer.setSize(window.innerWidth, window.innerHeight);
+    loaderRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    // Dynamic core geometry mapping color themes from the portfolio details
+    const geometry = new THREE.TorusKnotGeometry(0.9, 0.22, 100, 16);
+    
+    const materialInner = new THREE.MeshBasicMaterial({
+        color: 0xff0d19,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.25
+    });
+    loaderMesh = new THREE.Mesh(geometry, materialInner);
+    loaderScene.add(loaderMesh);
+
+    const materialOuter = new THREE.MeshBasicMaterial({
+        color: 0xa855f7,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.12
+    });
+    loaderMeshOuter = new THREE.Mesh(geometry, materialOuter);
+    loaderMeshOuter.scale.set(1.08, 1.08, 1.08);
+    loaderScene.add(loaderMeshOuter);
+
+    function animateLoader() {
+        loaderAnimationId = requestAnimationFrame(animateLoader);
+        if (loaderMesh) {
+            loaderMesh.rotation.x += 0.003;
+            loaderMesh.rotation.y += 0.006;
+        }
+        if (loaderMeshOuter) {
+            loaderMeshOuter.rotation.x -= 0.002;
+            loaderMeshOuter.rotation.y -= 0.004;
+        }
+        loaderRenderer.render(loaderScene, loaderCamera);
+    }
+    animateLoader();
+
+    window.addEventListener('resize', onLoaderResize);
+}
+
+function onLoaderResize() {
+    if (!loaderRenderer || !loaderCamera) return;
+    loaderCamera.aspect = window.innerWidth / window.innerHeight;
+    loaderCamera.updateProjectionMatrix();
+    loaderRenderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function updateLoaderProgress(percent) {
+    const rounded = Math.round(percent);
+    gsap.to('.loader-progress-bar', { width: `${rounded}%`, duration: 0.2 });
+    const percentageEl = document.querySelector('.loader-percentage');
+    if (percentageEl) {
+        percentageEl.textContent = `${rounded}%`;
+    }
+    
+    if (rounded >= 100) {
+        hideLoadingScreen();
+    }
+}
+
+let isLoaderRemoved = false;
+function hideLoadingScreen() {
+    if (isLoaderRemoved) return;
+    isLoaderRemoved = true;
+
+    const tl = gsap.timeline({
+        onComplete: () => {
+            const screen = document.getElementById('loading-screen');
+            if (screen) screen.remove();
+            
+            // Clean up and release system memory instantly
+            window.removeEventListener('resize', onLoaderResize);
+            cancelAnimationFrame(loaderAnimationId);
+            if (loaderMesh) {
+                loaderMesh.geometry.dispose();
+                loaderMesh.material.dispose();
+            }
+            if (loaderMeshOuter) {
+                loaderMeshOuter.geometry.dispose();
+                loaderMeshOuter.material.dispose();
+            }
+            if (loaderRenderer) {
+                loaderRenderer.dispose();
+            }
+            loaderScene = null;
+            loaderCamera = null;
+            loaderRenderer = null;
+        }
+    });
+
+    // Clean exit sequence
+    tl.to('.loader-content', { opacity: 0, y: -25, duration: 0.5, ease: "power2.in" });
+    tl.to('#loader-canvas', { opacity: 0, duration: 0.5 }, "-=0.3");
+    tl.to('#loading-screen', { opacity: 0, duration: 0.8, ease: "power2.out" }, "-=0.2");
+}
+
+function animateLoaderRules() {
+    const tl = gsap.timeline();
+    tl.to('.loader-rules-container', {
+        opacity: 1,
+        y: 0,
+        duration: 0.7,
+        ease: "power2.out",
+        delay: 0.2
+    });
+    tl.to('.rule-item', {
+        opacity: 1,
+        x: 0,
+        stagger: 0.12,
+        duration: 0.4,
+        ease: "power2.out"
+    }, "-=0.4");
+}
+
 // --- STEP 2: Three.js Configuration ---
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(15, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -178,10 +307,22 @@ loader.load(
         }
 
         modelMove();
+        
+        // Final completion call to fade out loader
+        setTimeout(() => {
+            updateLoaderProgress(100);
+        }, 500);
     },
-    undefined,
+    function (xhr) {
+        if (xhr.total > 0) {
+            const percentComplete = (xhr.loaded / xhr.total) * 100;
+            // Cap visual loading at 99% until file parse sequence completes
+            updateLoaderProgress(Math.min(percentComplete, 99));
+        }
+    },
     function (error) {
         console.error("Error loading model: ", error);
+        updateLoaderProgress(100); // Soft failsafe to allow entry
     }
 );
 
@@ -486,6 +627,10 @@ document.addEventListener("DOMContentLoaded", () => {
     resetIntroElements();
     initGlobalTiltEffect(); // Triggers global interactive card tracking
     initInteractiveClouds(); // Handles tap triggers on mobile environments
+    
+    // Boot loading screen loops & rule systems
+    initLoaderWebGL();
+    animateLoaderRules();
 });
 
 function resetIntroElements() {
