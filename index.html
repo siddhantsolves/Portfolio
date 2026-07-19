@@ -5,10 +5,372 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VOID</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Skills Showcase Component Stylesheets -->
+    <style>
+        /* Merged styles for the Skills section */
+        #canvas-container {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          z-index: 1;
+          background: radial-gradient(circle at center, #110d18 0%, #06060c 100%);
+          opacity: 0;
+          pointer-events: none;
+          transition: opacity 0.5s ease;
+        }
+        #fullscreen-btn {
+          position: fixed;
+          top: 25px;
+          left: 30px;
+          z-index: 1000;
+          background: rgba(22, 13, 23, 0.45);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border: 1px solid rgba(244, 63, 94, 0.25);
+          color: #e2e8f0;
+          padding: 10px 16px;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 10px;
+          text-transform: uppercase;
+          letter-spacing: 1.5px;
+          font-weight: 600;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+          opacity: 0;
+          pointer-events: none;
+        }
+        #fullscreen-btn.active {
+          opacity: 1;
+          pointer-events: auto;
+        }
+        #scroll-wrapper {
+          position: relative;
+          width: 100%;
+          z-index: 10;
+          pointer-events: auto;
+          margin-top: 100vh; /* Displaces skills timeline to flow naturally after pin-container */
+        }
+        .scroll-section {
+          height: 100vh;
+          position: relative;
+          display: flex;
+          align-items: center;
+          padding: 0 10%;
+        }
+        .scroll-section:nth-child(even) {
+          justify-content: flex-end;
+        }
+        .scroll-section:nth-child(odd) {
+          justify-content: flex-start;
+        }
+        
+        /* Skills Node camera positioning overrides */
+        #section-0 {
+          justify-content: flex-end !important;
+          align-items: flex-start !important;
+          padding-top: 80px;
+          padding-right: 12%;
+        }
+        #section-3 {
+          justify-content: flex-start !important;
+          align-items: center !important;
+          padding-left: 8%;
+        }
+        #section-4 {
+          justify-content: flex-end !important;
+          align-items: center !important;
+          padding-right: 8%;
+        }
+        #section-6 {
+          justify-content: flex-start !important;
+          align-items: flex-end !important;
+          padding-bottom: 80px;
+          padding-left: 8%;
+        }
+        #section-8 {
+          justify-content: flex-start !important;
+          align-items: flex-end !important;
+          padding-bottom: 80px;
+          padding-left: 8%;
+        }
+        #section-9 {
+          justify-content: flex-end !important;
+          align-items: flex-end !important;
+          padding-bottom: 80px;
+          padding-right: 5%;
+        }
+        #section-11 {
+          justify-content: flex-end !important;
+          align-items: flex-start !important;
+          padding-top: 80px;
+          padding-right: 12%;
+        }
+        .skill-card {
+          pointer-events: auto;
+          background: rgba(18, 12, 28, 0.45);
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          border: 1px solid rgba(244, 63, 94, 0.18);
+          padding: 32px;
+          border-radius: 20px;
+          width: 100%;
+          max-width: 440px;
+          opacity: 0;
+          transform: translateY(40px);
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 
+                      inset 0 1px 1px rgba(255, 255, 255, 0.1);
+          position: relative;
+          overflow: visible !important;
+          transform-style: preserve-3d;
+          will-change: transform;
+          transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        .skill-card:hover {
+          border-color: rgba(244, 63, 94, 0.5);
+          box-shadow: 0 25px 60px rgba(244, 63, 94, 0.15), 
+                      0 20px 50px rgba(0, 0, 0, 0.7), 
+                      inset 0 1px 2px rgba(255, 255, 255, 0.15);
+        }
+        .skill-card::after {
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          width: 100px;
+          height: 100px;
+          background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="%23f43f5e" stroke-width="1.2" stroke-linecap="round"><path d="M100,0 C85,20 65,15 50,28 C42,32 45,42 35,46 C30,38 25,40 20,44 M70,14 C65,22 55,20 52,28 M50,28 C48,20 40,22 38,18" opacity="0.25"/></svg>') no-repeat top right;
+          pointer-events: none;
+          z-index: 1;
+        }
+        .scroll-section.active .skill-card {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        .skill-card h3 {
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+          color: #f43f5e;
+          margin-bottom: 8px;
+        }
+        .skill-card h2 {
+          font-size: 22px;
+          font-weight: 700;
+          color: #f8fafc;
+          margin-bottom: 12px;
+        }
+        .skill-card p {
+          font-size: 13px;
+          color: #cbd5e1;
+          line-height: 1.6;
+        }
+        .skill-list {
+          margin-bottom: 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+        }
+        .skill-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          border-bottom: 1px solid rgba(244, 63, 94, 0.08);
+          padding-bottom: 6px;
+          cursor: pointer;
+        }
+        .skill-row-left {
+          display: flex;
+          align-items: center;
+        }
+        .tech-icon {
+          width: 22px;
+          height: 22px;
+          margin-right: 12px;
+          vertical-align: middle;
+          display: inline-block;
+          flex-shrink: 0;
+        }
+        .skill-name {
+          font-size: 13px;
+          font-weight: 600;
+          color: #cbd5e1;
+          letter-spacing: 0.5px;
+          transition: color 0.3s ease;
+        }
+        .stars-container {
+          position: relative;
+          display: inline-block;
+          font-size: 14px;
+          color: rgba(244, 63, 94, 0.15);
+          letter-spacing: 2px;
+          user-select: none;
+        }
+        .stars-inner {
+          position: absolute;
+          top: 0;
+          left: 0;
+          white-space: nowrap;
+          overflow: hidden;
+          color: #fda4af;
+          text-shadow: 0 0 6px rgba(244, 63, 94, 0.8), 0 0 12px rgba(244, 63, 94, 0.4);
+          width: 0%;
+          pointer-events: none;
+        }
+        .petal-container {
+          position: absolute;
+          inset: 0;
+          pointer-events: none;
+          overflow: visible;
+          z-index: 10;
+        }
+        .cherry-petal {
+          position: absolute;
+          background: linear-gradient(135deg, #fda4af 0%, #f43f5e 100%);
+          opacity: 0.85;
+          border-radius: 12px 0 12px 12px;
+          pointer-events: none;
+          will-change: transform, opacity;
+          box-shadow: 0 2px 6px rgba(244, 63, 94, 0.3);
+          transform-origin: center;
+        }
+        .cherry-petal.resting-petal {
+          transform: rotate(var(--rest-rot, 0deg)) scale(var(--rest-scale, 1));
+          opacity: 0.9;
+        }
+        @keyframes fade-in-petal {
+          0% {
+            opacity: 0;
+            transform: translateY(-8px) rotate(var(--rest-rot, 0deg)) scale(0);
+          }
+          100% {
+            opacity: 0.9;
+            transform: translateY(0) rotate(var(--rest-rot, 0deg)) scale(var(--rest-scale, 1));
+          }
+        }
+        .cherry-petal.resting-petal.fade-in {
+          animation: fade-in-petal 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes fall-and-tumble {
+          0% {
+            transform: translateY(0) rotate(var(--rest-rot, 0deg)) scale(var(--rest-scale, 1));
+            opacity: 0.9;
+          }
+          100% {
+            transform: translateY(var(--fall-distance, 450px)) translateX(var(--sway-distance, 80px)) rotateX(var(--rot-x, 720deg)) rotateY(var(--rot-y, 360deg)) rotateZ(var(--rot-z, 180deg)) scale(0.2);
+            opacity: 0;
+          }
+        }
+        #scroll-dots {
+          position: fixed;
+          right: 30px;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 100;
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.5s ease;
+        }
+        #scroll-indicator {
+          position: fixed;
+          bottom: 30px;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 100;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+          color: #94a3b8;
+          font-size: 10px;
+          letter-spacing: 1.5px;
+          text-transform: uppercase;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.5s ease;
+        }
+        .mouse-wheel {
+          width: 20px;
+          height: 32px;
+          border: 2px solid #94a3b8;
+          border-radius: 10px;
+          position: relative;
+        }
+        .mouse-wheel::before {
+          content: '';
+          position: absolute;
+          top: 6px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 4px;
+          height: 8px;
+          background-color: #f43f5e;
+          border-radius: 2px;
+          animation: scroll-ping 1.5s infinite;
+        }
+        @keyframes scroll-ping {
+          0% { opacity: 1; transform: translate(-50%, 0); }
+          100% { opacity: 0; transform: translate(-50%, 10px); }
+        }
+        #notification-toast {
+          position: fixed;
+          bottom: 20px;
+          left: 20px;
+          background: rgba(15, 23, 42, 0.9);
+          border: 1px solid rgba(244, 63, 94, 0.3);
+          padding: 10px 18px;
+          border-radius: 8px;
+          z-index: 10000;
+          font-size: 11px;
+          color: #e2e8f0;
+          display: none;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+        @media (max-width: 768px) {
+          .scroll-section {
+            justify-content: center !important;
+            align-items: center !important;
+            padding: 0 20px !important;
+          }
+          .skill-card {
+            padding: 24px;
+            max-width: 100%;
+          }
+          #scroll-dots {
+            right: 15px;
+          }
+          #fullscreen-btn {
+            top: 15px;
+            left: 15px;
+            padding: 8px 12px;
+            font-size: 9px;
+          }
+        }
+    </style>
+
+    <!-- Import Maps mapping Modular ES dependencies -->
+    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.150.0/build/three.module.js",
+          "three/addons/": "https://unpkg.com/three@0.150.0/examples/jsm/"
+        }
+      }
+    </script>
 </head>
 <body>
     <!-- Transparent overlay for your 3D Car Model -->
     <div id="container3D"></div>
+
+    <!-- Transparent canvas layer for Skills 3D scene -->
+    <div id="canvas-container"></div>
 
     <img class="image-gradient" src="items/gradient.png" alt="gradient">
     <div class="layer-blur"></div>
@@ -21,10 +383,11 @@
             
             <nav>
                 <a href="#intro">INTRO</a>
-                <a href="#about">ABOUT</a>
-                <a href="#skills">SKILLS</a>
-                <a href="#goal">GOAL</a>
-                <a href="#contact">CONTACT</a>
+                <a href="#my-story">ABOUT</a>
+                <a href="#why-i-build">BUILD</a>
+                <a href="#how-i-think">THINK</a>
+                <a href="#where-headed">FUTURE</a>
+                <a href="#skills-anchor">SKILLS</a>
             </nav>
             
             <a href="#intro" style="text-decoration:none;">
@@ -89,7 +452,7 @@
             </div>
         </main>
 
-        <!-- Horizontal Pinned Container (Intro -> Skills -> Goal) -->
+        <!-- Horizontal Pinned Container (Intro -> Goals) -->
         <div id="pin-container">
             <div id="horizontal-scroll">
                 
@@ -380,33 +743,272 @@
                     </div>
                 </section>
                 
-                <!-- Section 6: Skills -->
-                <section class="portfolio-section" id="skills">
-                    <div class="section-content left">
-                        <h2>06. SKILLS</h2>
-                        <p>JavaScript, Three.js, CSS Animations, and UI/UX layouts. Creating interactive environments is what I specialize in.</p>
-                    </div>
-                </section>
-
-                <!-- Section 7: Goal -->
-                <section class="portfolio-section" id="goal">
-                    <div class="section-content right">
-                        <h2>07. THE GOAL</h2>
-                        <p>To continue building clean, memorable, and immersive web designs that combine design theory with code.</p>
-                    </div>
-                </section>
-                
             </div>
         </div>
+    </div> <!-- Close Master Container -->
 
-        <!-- Section 8: Contact -->
-        <section class="portfolio-section" id="contact">
-            <div class="section-content left">
-                <h2>08. CONTACT</h2>
-                <p>Let's collaborate on your next interactive project. Drop me an email or find me on my social channels.</p>
+    <!-- Smooth Anchor link target for navigation links -->
+    <div id="skills-anchor"></div>
+
+    <!-- Immersive Cinematic Scrolling Sections (Waypoint Showcase) -->
+    <div id="scroll-wrapper">
+      <!-- View 01 (Index 0) - Poetic Introduction -->
+      <div class="scroll-section" id="section-0">
+        <div class="skill-card">
+          <h3>Waypoint 01 — The Prelude</h3>
+          <h2>The Architect's Loom</h2>
+          <p style="font-style: italic; white-space: pre-line; line-height: 1.8;">Where logic weaves through lines of code,
+            And pixels bloom along my road.
+            Step inside my spatial space,
+            Where art and science interlace.</p>
+        </div>
+      </div>
+      
+      <!-- View 02 (Index 1) - Frontend Fundamentals -->
+      <div class="scroll-section" id="section-1">
+        <div class="skill-card">
+          <h3>Waypoint 02 — Web Core</h3>
+          <h2>Frontend Fundamentals</h2>
+          <div class="skill-list">
+            <div class="skill-row">
+              <div class="skill-row-left">
+                <!-- HTML5 Logo -->
+                <svg viewBox="0 0 24 24" class="tech-icon"><path d="M1.5 0h21l-1.91 21.563L12 24l-8.59-2.437z" fill="#e34f26"/><path d="M12 2.182v19.57l6.816-1.933L20.25 3.86z" fill="#f06529"/><path d="M12 11.233H8.38l-.25-2.8h3.87V5.63H5.03l.76 8.52h6.21zm0 5.562l-3.07-.828-.2-2.204H5.16l.39 4.39 6.45 1.833z" fill="#ebebeb"/><path d="M12 11.233h3.62l-.34 3.82-3.28.88v2.79l6.45-1.83.6-6.86H12zm0-5.603h6.86l-.16 1.8h-6.7z" fill="#fff"/></svg>
+                <span class="skill-name">HTML5</span>
+              </div>
+              <div class="stars-container">
+                ★★★★★
+                <div class="stars-inner" data-width="100%">★★★★★</div>
+              </div>
             </div>
-        </section>
+            <div class="skill-row">
+              <div class="skill-row-left">
+                <!-- CSS3 Logo -->
+                <svg viewBox="0 0 24 24" class="tech-icon"><path d="M1.5 0h21l-1.91 21.563L12 24l-8.59-2.437z" fill="#1572b6"/><path d="M12 2.182v19.57l6.816-1.933L20.25 3.86z" fill="#33a9dc"/><path d="M12 11.233H8.38l-.25-2.8h3.87V5.63H5.03l.76 8.52h6.21zm0 5.562l-3.07-.828-.2-2.204H5.16l.39 4.39 6.45 1.833z" fill="#ebebeb"/><path d="M12 11.233h3.42l-.34 3.82-3.08.88v2.79l6.05-1.83.6-6.86H12zm0-5.603h6.46l-.16 1.8h-6.3z" fill="#fff"/></svg>
+                <span class="skill-name">CSS</span>
+              </div>
+              <div class="stars-container">
+                ★★★★★
+                <div class="stars-inner" data-width="90%">★★★★★</div>
+              </div>
+            </div>
+          </div>
+          <p>Structuring clean web semantics and crafting detailed style rules to establish highly structured, responsive user interfaces.</p>
+        </div>
+      </div>
+      
+      <!-- View 03 (Index 2) - Card Removed -->
+      <div class="scroll-section" id="section-2"></div>
+      
+      <!-- View 04 (Index 3) - Frontend Development -->
+      <div class="scroll-section" id="section-3">
+        <div class="skill-card">
+          <h3>Waypoint 04 — Client Interaction</h3>
+          <h2>Frontend Development</h2>
+          <div class="skill-list">
+            <div class="skill-row">
+              <div class="skill-row-left">
+                <!-- JS Logo -->
+                <svg viewBox="0 0 24 24" class="tech-icon"><rect width="24" height="24" rx="3" fill="#f7df1e"/><text x="22" y="21" fill="#323330" font-family="Arial, sans-serif" font-weight="900" font-size="11" text-anchor="end">JS</text></svg>
+                <span class="skill-name">JavaScript</span>
+              </div>
+              <div class="stars-container">
+                ★★★★★
+                <div class="stars-inner" data-width="80%">★★★★★</div>
+              </div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-row-left">
+                <!-- TS Logo -->
+                <svg viewBox="0 0 24 24" class="tech-icon"><rect width="24" height="24" rx="3" fill="#3178c6"/><text x="22" y="21" fill="#fff" font-family="Arial, sans-serif" font-weight="900" font-size="11" text-anchor="end">TS</text></svg>
+                <span class="skill-name">TypeScript</span>
+              </div>
+              <div class="stars-container">
+                ★★★★★
+                <div class="stars-inner" data-width="70%">★★★★★</div>
+              </div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-row-left">
+                <!-- GSAP Logo -->
+                <svg viewBox="0 0 24 24" class="tech-icon" fill="#88ce02"><path d="M8 3a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v10a4 4 0 0 1-4 4h-2a2 2 0 0 0-2 2v2h4a2 2 0 0 1 2 2v1H6v-3a4 4 0 0 1 4-4h2a2 2 0 0 0 2-2V3H8z" opacity="0.9"/></svg>
+                <span class="skill-name">GSAP</span>
+              </div>
+              <div class="stars-container">
+                ★★★★★
+                <div class="stars-inner" data-width="70%">★★★★★</div>
+              </div>
+            </div>
+          </div>
+          <p>Implementing client architectures with clean scripts, static type checks, and fluid, scroll-synced timeline animations.</p>
+        </div>
+      </div>
+      
+      <!-- View 05 (Index 4) - 3D Designing -->
+      <div class="scroll-section" id="section-4">
+        <div class="skill-card">
+          <h3>Waypoint 05 — Spatial Dimension</h3>
+          <h2>3D Designing</h2>
+          <div class="skill-list">
+            <div class="skill-row">
+              <div class="skill-row-left">
+                <!-- Three.js Logo -->
+                <svg viewBox="0 0 24 24" class="tech-icon" fill="none" stroke="#ffffff" stroke-width="1.5"><polygon points="12,2 2,18 22,18" stroke="#ffffff" /><line x1="12" y1="2" x2="12" y2="18" /><line x1="2" y1="18" x2="12" y2="10" /><line x1="22" y1="18" x2="12" y2="10" /></svg>
+                <span class="skill-name">Three.js</span>
+              </div>
+              <div class="stars-container">
+                ★★★★★
+                <div class="stars-inner" data-width="80%">★★★★★</div>
+              </div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-row-left">
+                <!-- WebGL Logo -->
+                <svg viewBox="0 0 24 24" class="tech-icon" fill="none" stroke="#ff3333" stroke-width="1.5"><circle cx="12" cy="12" r="10" stroke="#990000" /><path d="M6 15l4-6 4 6 4-6" stroke="#ff3333" stroke-width="2" /></svg>
+                <span class="skill-name">WebGL</span>
+              </div>
+              <div class="stars-container">
+                ★★★★★
+                <div class="stars-inner" data-width="80%">★★★★★</div>
+              </div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-row-left">
+                <!-- Spline Logo -->
+                <svg viewBox="0 0 24 24" class="tech-icon" fill="none" stroke="#f43f5e" stroke-width="2"><path d="M4 12c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8-8-3.582-8-8z" stroke="#333" stroke-width="1"/><path d="M8 8c2-2 6-2 8 0s-2 6-4 8-6 2-4-4" stroke="#f43f5e" /></svg>
+                <span class="skill-name">Spline</span>
+              </div>
+              <div class="stars-container">
+                ★★★★★
+                <div class="stars-inner" data-width="70%">★★★★★</div>
+              </div>
+            </div>
+          </div>
+          <p>Constructing interactive mesh scenes and programming custom GPU-backed shaders to render immersive spatial systems in real-time.</p>
+        </div>
+      </div>
+      
+      <!-- View 06 (Index 5) - Card Removed -->
+      <div class="scroll-section" id="section-5"></div>
+      
+      <!-- View 07 (Index 6) - Programming -->
+      <div class="scroll-section" id="section-6">
+        <div class="skill-card">
+          <h3>Waypoint 07 — Logic & Systems</h3>
+          <h2>Programming</h2>
+          <div class="skill-list">
+            <div class="skill-row">
+              <div class="skill-row-left">
+                <!-- Python Logo -->
+                <svg viewBox="0 0 24 24" class="tech-icon" fill="#306998"><path d="M11.89 2c-3.1 0-2.9 1.34-2.9 1.34l.01 1.39h2.93v.42H7.72S5 4.8 5 8.1c0 3.3 2.37 3.19 2.37 3.19l1.42-.01V9.85c0-1.57 1.28-2.93 2.85-2.93h4.35s1.3-.08 1.3-2.88c0-2.8-2.61-3.04-2.61-3.04l-2.8-.01zm2.34 2.01a.63.63 0 1 1 0 1.25.63.63 0 0 1 0-1.25z" fill="#306998"/><path d="M12.11 22c3.1 0 2.9-1.34 2.9-1.34l-.01-1.39H12.07v-.42h4.21s2.72.35 2.72-2.95c0-3.3-2.37-3.19-2.37-3.19l-1.42.01v1.43c0 1.57-1.28 2.93-2.85 2.93H10s-1.3.08-1.3 2.88c0 2.8 2.61 3.04 2.61 3.04l2.8.01zm-2.34-2.01a.63.63 0 1 1 0-1.25.63.63 0 0 1 0 1.25z" fill="#ffd43b"/></svg>
+                <span class="skill-name">Python</span>
+              </div>
+              <div class="stars-container">
+                ★★★★★
+                <div class="stars-inner" data-width="80%">★★★★★</div>
+              </div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-row-left">
+                <!-- C Bracket Logo -->
+                <svg viewBox="0 0 24 24" class="tech-icon" fill="none" stroke="#a8b9cc" stroke-width="2"><path d="M16 6a6 6 0 1 0 0 12" /><path d="M12 12h8" stroke="#3178c6" stroke-width="1.5" /></svg>
+                <span class="skill-name">C</span>
+              </div>
+              <div class="stars-container">
+                ★★★★★
+                <div class="stars-inner" data-width="100%">★★★★★</div>
+              </div>
+            </div>
+          </div>
+          <p>Developing close-to-metal low-level scripts, memory adjustments, data handling operations, and optimized execution pipelines.</p>
+        </div>
+      </div>
+      
+      <!-- View 08 (Index 7) - Card Removed -->
+      <div class="scroll-section" id="section-7"></div>
+      
+      <!-- View 09 (Index 8) - Graphics Designing -->
+      <div class="scroll-section" id="section-8">
+        <div class="skill-card">
+          <h3>Waypoint 09 — Visual Assets</h3>
+          <h2>Graphics Designing</h2>
+          <div class="skill-list">
+            <div class="skill-row">
+              <div class="skill-row-left">
+                <!-- Canva Logo -->
+                <svg viewBox="0 0 24 24" class="tech-icon" fill="#00c4cc"><rect width="24" height="24" rx="6"/><text x="12" y="16" fill="#fff" font-family="Georgia, serif" font-weight="bold" font-size="14" text-anchor="middle">C</text></svg>
+                <span class="skill-name">Canva</span>
+              </div>
+              <div class="stars-container">
+                ★★★★★
+                <div class="stars-inner" data-width="90%">★★★★★</div>
+              </div>
+            </div>
+            <div class="skill-row">
+              <div class="skill-row-left">
+                <!-- Adobe Logo -->
+                <svg viewBox="0 0 24 24" class="tech-icon" fill="#ff0000"><path d="M12.2 2L2 22h4.5l2.6-6.1h5.8l2.6 6.1H22L11.8 2zm-.4 5.3l1.8 4.3H10l1.8-4.3z" fill="#ff0000"/></svg>
+                <span class="skill-name">Adobe</span>
+              </div>
+              <div class="stars-container">
+                ★★★★★
+                <div class="stars-inner" data-width="80%">★★★★★</div>
+              </div>
+            </div>
+          </div>
+          <p>Designing digital design sheets, vector-based graphics, layout standards, and visual compositions to reinforce user journeys.</p>
+        </div>
+      </div>
+      
+      <!-- View 10 (Index 9) - Database Management -->
+      <div class="scroll-section" id="section-9">
+        <div class="skill-card">
+          <h3>Waypoint 10 — Structured Storage</h3>
+          <h2>Database Management</h2>
+          <div class="skill-list">
+            <div class="skill-row">
+              <div class="skill-row-left">
+                <!-- MySQL Logo -->
+                <svg viewBox="0 0 24 24" class="tech-icon" fill="none" stroke="#00c4cc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 18c-1.427 -1.026 -3.59 -3.854 -4 -6c-.486 .766 -2.36 2.067 -4 1c-.25 -.16 -1.03 -1.134 -1 -2c.03 -.866 .54 -1.72 1 -2.5c.333 -.566 .667 -1.15 1 -1.5c.148 -.148 .54 -.54 1 -1c.427 -.427 1.15 -1 2 -1c1.621 0 2.213 .843 3 2c1.285 1.887 2.106 3.11 3.5 4c.667 .425 1.5 1.5 1.5 2c0 .4 -.5 1.5 -1 2s-1.5 1 -2 1s-1.5 -.5 -2 -1z" stroke="#00758f" /><circle cx="9" cy="7" r="0.5" fill="#00758f" stroke="none" /><path d="M3 20c3 -1.5 6 1.5 9 0s6 -1.5 9 0" stroke="#f29111" stroke-width="1.5" /></svg>
+                <span class="skill-name">MySQL</span>
+              </div>
+              <div class="stars-container">
+                ★★★★★
+                <div class="stars-inner" data-width="80%">★★★★★</div>
+              </div>
+            </div>
+          </div>
+          <p>Architecting database relational tables, managing schemas safely, and building search operations with clean index logic.</p>
+        </div>
+      </div>
+      
+      <!-- View 11 (Index 10) - Card Removed -->
+      <div class="scroll-section" id="section-10"></div>
+      
+      <!-- View 12 (Index 11) - Poetic Conclusion -->
+      <div class="scroll-section" id="section-11">
+        <div class="skill-card">
+          <h3>Waypoint 12 — The Horizon</h3>
+          <h2>The Infinite Canvas</h2>
+          <p style="font-weight: 600; line-height: 1.8; color: #fda4af;">“I do not merely build interfaces; I sculpt the digital spaces where human imagination meets reality.”</p>
+        </div>
+      </div>
     </div>
+
+    <!-- Fullscreen Toggle Button -->
+    <button id="fullscreen-btn">View Fullscreen</button>
+
+    <!-- Dynamic Vertical Progress Dots (Skills specific) -->
+    <div id="scroll-dots"></div>
+
+    <!-- Floating Scroll indicator (Skills specific) -->
+    <div id="scroll-indicator">
+        <div class="mouse-wheel"></div>
+        <span>Scroll to Explore</span>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notification-toast">Workspace Ready</div>
 
     <!-- 3D LIBRARIES (Imported via CDN) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -414,7 +1016,920 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
-    <!-- Custom Logic -->
+    <!-- Main Custom Logic for Car Engine (app.js) -->
     <script src="app.js"></script>
+
+    <!-- Modular Custom Logic for the Skills Engine -->
+    <script type="module">
+        import * as THREE from 'three';
+        import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+        import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js'; 
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        // Core variables
+        let scene, camera, renderer, clock;
+        let ambientLight, directionalLight;
+        let workspaceModelsGroup;
+
+        // Dynamic Orbit Controls tracker
+        let controls = null;
+        let currentLookAt = new THREE.Vector3();
+
+        // Camera waypoint values mapping positions inside skills.glb
+        const WAYPOINTS = [
+          {
+            "pos": [0.7443983932041797, 1.399862446093395, -1.0177532383406969],
+            "target": [-0.4437977292651064, 1.2323065756851708, -0.12214762361305545]
+          },
+          {
+            "pos": [-0.6818938156371508, 1.8333016244504448, -1.4727436433935677],
+            "target": [-0.44379772752179525, 1.2323065753053668, -0.1221476208841582]
+          },
+          {
+            "pos": [-1.0945293710339026, 1.65192354079197, 0.08831478156925375],
+            "target": [-0.3932036812157214, 1.3103276829062953, -0.07929163390234457]
+          },
+          {
+            "pos": [-0.2215251700178958, 1.358370409055726, 0.5383422704920537],
+            "target": [-0.24707338483706973, 1.25269446080833, -0.06378135150826038]
+          },
+          {
+            "pos": [-0.4662674217762476, 1.2508390691923676, -0.3815539658678175],
+            "target": [-0.3219287094131729, 1.2883876329966941, -0.0362760891490478]
+          },
+          {
+            "pos": [-0.4365279003488767, 1.397302470186913, 0.1546056340038297],
+            "target": [-0.27040490013715457, 1.3412442610339925, 0.08733361929887715]
+          },
+          {
+            "pos": [-0.20883729587943362, 1.3243787520557337, 0.262960383133314],
+            "target": [-0.172505415678244, 1.3156939358859898, 0.11612582994747757]
+          },
+          {
+            "pos": [0.1073129904210154, 1.340801403692325, 0.36423533205268677],
+            "target": [-0.1228550797513122, 1.3126936257679631, 0.07839094387213043]
+          },
+          {
+            "pos": [-0.02578083306711665, 1.3086377867098324, -0.27521097305108444],
+            "target": [-0.12417074723891627, 1.3128389252513482, 0.07943839912548713]
+          },
+          {
+            "pos": [-0.45859994002894133, 1.5177909560350626, -0.3296833586517661],
+            "target": [-0.08179900955898894, 1.329281790312239, 0.04348087948550014]
+          },
+          {
+            "pos": [-0.09923779865556434, 1.3102962394499427, 0.38433753272163884],
+            "target": [-0.07341353755066768, 1.316658347855162, 0.04405157786034033]
+          },
+          {
+            "pos": [0.6835448403717217, 1.4290411374586063, 0.6775231982685418],
+            "target": [-0.0373249792786195, 1.3225573492182527, 0.0018230503934674339]
+          }
+        ];
+
+        // Scroll interpolation engines
+        let scrollProgress = 0;
+        let targetScrollProgress = 0;
+        const lerpFactor = 0.05; // Smoothing intensity
+        let currentWaypointIndex = 0;
+        
+        // Core state switches
+        let freeOrbitActive = false;
+
+        init();
+        animate();
+
+        function init() {
+          clock = new THREE.Clock();
+
+          // Core Scene Container configured with transparency to preserve background radial-gradient
+          scene = new THREE.Scene();
+          scene.background = null;
+          scene.fog = new THREE.FogExp2(0x06060c, 0.035);
+
+          // Camera initialization using the first waypoint
+          camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+          const startWp = WAYPOINTS[0];
+          camera.position.set(startWp.pos[0], startWp.pos[1], startWp.pos[2]);
+          currentLookAt.set(startWp.target[0], startWp.target[1], startWp.target[2]);
+
+          // WebGL Renderer configurations
+          renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          renderer.shadowMap.enabled = true;
+          renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+          document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+          // Models Group configuration
+          workspaceModelsGroup = new THREE.Group();
+          scene.add(workspaceModelsGroup);
+
+          // Ambient Lighting Setup
+          ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+          scene.add(ambientLight);
+
+          // Directional Lighting Setup
+          directionalLight = new THREE.DirectionalLight(0xffffff, 0.1);
+          directionalLight.position.set(5, 10, 5);
+          directionalLight.castShadow = true;
+          directionalLight.shadow.mapSize.width = 1024;
+          directionalLight.shadow.mapSize.height = 1024;
+          directionalLight.shadow.bias = -0.001;
+          scene.add(directionalLight);
+
+          // Ground plane setup for smooth shadow projection
+          const floorGeo = new THREE.PlaneGeometry(100, 100);
+          const floorMat = new THREE.ShadowMaterial({ opacity: 0.35 });
+          const floorMesh = new THREE.Mesh(floorGeo, floorMat);
+          floorMesh.rotation.x = -Math.PI / 2;
+          floorMesh.position.y = -0.02;
+          floorMesh.receiveShadow = true;
+          scene.add(floorMesh);
+
+          // Generate Navigation Dot Indicators
+          buildDotNavigation();
+
+          // Load Assets Setup
+          loadPortfolioAssets();
+
+          // Event Observers
+          window.addEventListener('resize', onWindowResize);
+          window.addEventListener('scroll', onPageScroll);
+
+          // Bind Mode Click Interfaces
+          setupUserInteractionEvents();
+
+          // Setup dynamic shedding cards
+          setupCherryCards();
+
+          // Setup card interactive 3D physics & elements timeline triggers
+          setupGSAPInteractivity();
+
+          // Initialize default scroll mode states and active layout properties
+          setCinematicScrollMode(true);
+        }
+
+        // Handles loading spatial assets asynchronously behind the scenes
+        function loadPortfolioAssets() {
+          const loader = new GLTFLoader();
+
+          // Initialize Draco Decoder fallbacks
+          const dracoLoader = new DRACOLoader();
+          dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.5/'); 
+          loader.setDRACOLoader(dracoLoader);
+
+          loader.load(
+            './skills.glb',
+            (gltf) => {
+              const loadedModel = gltf.scene;
+              loadedModel.name = "Portfolio_Skills_Model";
+
+              loadedModel.traverse(node => {
+                if (node.isMesh) {
+                  node.castShadow = true;
+                  node.receiveShadow = true;
+                  if (node.material) {
+                    node.material.roughness = Math.max(node.material.roughness, 0.15);
+                  }
+                }
+              });
+
+              workspaceModelsGroup.add(loadedModel);
+              showToast("Skills environment loaded successfully");
+            },
+            undefined,
+            (error) => {
+              console.warn(" skills.glb loading skipped, deploying fallback system core.", error);
+              loadProceduralFallbackStructure();
+            }
+          );
+        }
+
+        // Generates an interactive reactor hub when skills.glb is unavailable
+        function loadProceduralFallbackStructure() {
+          const group = new THREE.Group();
+          group.name = "Procedural_Reactor";
+
+          const baseGeo = new THREE.CylinderGeometry(1.5, 1.7, 0.3, 32);
+          const baseMat = new THREE.MeshStandardMaterial({
+            color: 0x111827,
+            metalness: 0.95,
+            roughness: 0.1
+          });
+          const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+          baseMesh.position.y = 0.15;
+          baseMesh.castShadow = true;
+          baseMesh.receiveShadow = true;
+          group.add(baseMesh);
+
+          const cylinderGeo = new THREE.CylinderGeometry(0.6, 0.6, 1.4, 16);
+          const cylinderMat = new THREE.MeshStandardMaterial({
+            color: 0x0f172a,
+            metalness: 0.9,
+            roughness: 0.1
+          });
+          const corePillar = new THREE.Mesh(cylinderGeo, cylinderMat);
+          corePillar.position.y = 1.0;
+          corePillar.castShadow = true;
+          corePillar.receiveShadow = true;
+          group.add(corePillar);
+
+          const coreGeo = new THREE.OctahedronGeometry(0.4, 0);
+          const coreMat = new THREE.MeshStandardMaterial({
+            color: 0xf43f5e,
+            emissive: 0xe11d48,
+            emissiveIntensity: 2.0,
+            metalness: 0.1,
+            roughness: 0.05
+          });
+          const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+          coreMesh.position.y = 1.3;
+          coreMesh.name = "GlowCoreCrystal";
+          group.add(coreMesh);
+
+          const ringGeo = new THREE.TorusGeometry(1.2, 0.06, 12, 48);
+          const ringMat = new THREE.MeshStandardMaterial({
+            color: 0xf43f5e,
+            metalness: 0.9,
+            roughness: 0.1
+          });
+          const dynamicRing = new THREE.Mesh(ringGeo, ringMat);
+          dynamicRing.rotation.x = Math.PI / 2;
+          dynamicRing.position.y = 1.3;
+          dynamicRing.name = "GlowCoreRing";
+          group.add(dynamicRing);
+
+          workspaceModelsGroup.add(group);
+          showToast("Using procedural fallback core");
+        }
+
+        // Dedicated viewport intersection logic to switch camera waypoints smoothly
+        function onPageScroll() {
+          const wrapper = document.getElementById('scroll-wrapper');
+          if (!wrapper) return;
+
+          const rect = wrapper.getBoundingClientRect();
+          const viewportHeight = window.innerHeight;
+          
+          const wrapperTop = window.scrollY + rect.top; 
+          const wrapperHeight = rect.height - viewportHeight;
+          const relativeScroll = window.scrollY - wrapperTop;
+          
+          // Calculate scroll progress clamped purely within the skills wrapper boundaries
+          targetScrollProgress = Math.max(0, Math.min(1, relativeScroll / wrapperHeight));
+
+          const indicator = document.getElementById('scroll-indicator');
+          const fsBtn = document.getElementById('fullscreen-btn');
+          const skillsCanvas = document.getElementById('canvas-container');
+          const dots = document.getElementById('scroll-dots');
+          const carCanvas = document.getElementById('container3D');
+
+          // Verify if user is actively browsing within the Skills showcase viewport
+          if (window.scrollY >= wrapperTop - viewportHeight / 2) {
+            // Hide the floating car overlays entirely
+            if (carCanvas) {
+              carCanvas.style.opacity = '0';
+              carCanvas.style.pointerEvents = 'none';
+            }
+            // Display skills spatial interface
+            if (skillsCanvas) {
+              skillsCanvas.style.opacity = '1';
+              skillsCanvas.style.pointerEvents = 'auto';
+            }
+            if (fsBtn) {
+              fsBtn.classList.add('active');
+            }
+            if (dots) {
+              dots.style.opacity = '1';
+              dots.style.pointerEvents = 'auto';
+            }
+            if (indicator) {
+              if (relativeScroll > 50) {
+                indicator.style.opacity = '0';
+              } else {
+                indicator.style.opacity = '1';
+              }
+            }
+          } else {
+            // Restore car visibility when scrolling back up the page
+            if (carCanvas) {
+              const scrollY = window.scrollY;
+              if (scrollY > 150) { 
+                carCanvas.style.opacity = '1';
+                carCanvas.style.pointerEvents = 'auto';
+              }
+            }
+            if (skillsCanvas) {
+              skillsCanvas.style.opacity = '0';
+              skillsCanvas.style.pointerEvents = 'none';
+            }
+            if (fsBtn) {
+              fsBtn.classList.remove('active');
+            }
+            if (dots) {
+              dots.style.opacity = '0';
+              dots.style.pointerEvents = 'none';
+            }
+            if (indicator) {
+              indicator.style.opacity = '0';
+            }
+          }
+        }
+
+        // Interactive Star animations
+        function animateStars(section) {
+          const stars = section.querySelectorAll('.stars-inner');
+          stars.forEach(star => {
+            const targetWidth = star.getAttribute('data-width');
+            gsap.to(star, {
+              width: targetWidth,
+              duration: 1.4,
+              ease: "power2.out",
+              overwrite: "auto",
+              delay: 0.2
+            });
+          });
+        }
+
+        function resetStars(section) {
+          const stars = section.querySelectorAll('.stars-inner');
+          stars.forEach(star => {
+            gsap.to(star, {
+              width: "0%",
+              duration: 0.4,
+              ease: "power2.in",
+              overwrite: "auto"
+            });
+          });
+        }
+
+        // Coordinates camera vectors during linear scroll interpolation
+        function updateCameraSpatialInterpolation() {
+          if (freeOrbitActive) return;
+
+          scrollProgress += (targetScrollProgress - scrollProgress) * lerpFactor;
+
+          const totalWaypoints = WAYPOINTS.length;
+          const scaledVal = scrollProgress * (totalWaypoints - 1);
+          const segmentIndex = Math.floor(scaledVal);
+          const localProgress = scaledVal - segmentIndex;
+
+          let targetPos = new THREE.Vector3();
+          let targetFocus = new THREE.Vector3();
+
+          if (segmentIndex >= totalWaypoints - 1) {
+            const lastWp = WAYPOINTS[totalWaypoints - 1];
+            targetPos.set(lastWp.pos[0], lastWp.pos[1], lastWp.pos[2]);
+            targetFocus.set(lastWp.target[0], lastWp.target[1], lastWp.target[2]);
+            currentWaypointIndex = totalWaypoints - 1;
+          } else {
+            const currentWp = WAYPOINTS[segmentIndex];
+            const nextWp = WAYPOINTS[segmentIndex + 1];
+
+            const pStart = new THREE.Vector3(currentWp.pos[0], currentWp.pos[1], currentWp.pos[2]);
+            const pEnd = new THREE.Vector3(nextWp.pos[0], nextWp.pos[1], nextWp.pos[2]);
+            targetPos.lerpVectors(pStart, pEnd, localProgress);
+
+            const fStart = new THREE.Vector3(currentWp.target[0], currentWp.target[1], currentWp.target[2]);
+            const fEnd = new THREE.Vector3(nextWp.target[0], nextWp.target[1], nextWp.target[2]);
+            targetFocus.lerpVectors(fStart, fEnd, localProgress);
+
+            currentWaypointIndex = Math.round(scaledVal);
+          }
+
+          camera.position.copy(targetPos);
+          currentLookAt.copy(targetFocus);
+
+          updateDOMElementsStates();
+        }
+
+        // Toggles DOM element states based on intersection index values
+        function updateDOMElementsStates() {
+          const sections = document.querySelectorAll('.scroll-section');
+          const dots = document.querySelectorAll('.dot-node');
+
+          sections.forEach((section, idx) => {
+            if (idx === currentWaypointIndex) {
+              if (!section.classList.contains('active')) {
+                section.classList.add('active');
+                animateStars(section);
+              }
+            } else {
+              if (section.classList.contains('active')) {
+                section.classList.remove('active');
+                resetStars(section);
+              }
+            }
+          });
+
+          dots.forEach((dot, idx) => {
+            if (idx === currentWaypointIndex) {
+              dot.classList.add('active');
+            } else {
+              dot.classList.remove('active');
+            }
+          });
+        }
+
+        // Lateral progress navigation builder
+        function buildDotNavigation() {
+          const container = document.getElementById('scroll-dots');
+          container.innerHTML = '';
+
+          WAYPOINTS.forEach((_, idx) => {
+            const dot = document.createElement('div');
+            dot.className = 'dot-node';
+            if (idx === 0) dot.classList.add('active');
+            dot.dataset.index = idx;
+
+            dot.addEventListener('click', () => {
+              const wrapper = document.getElementById('scroll-wrapper');
+              if (!wrapper) return;
+              const rect = wrapper.getBoundingClientRect();
+              const wrapperTop = window.scrollY + rect.top; 
+              const wrapperHeight = rect.height - window.innerHeight;
+              const targetY = wrapperTop + (idx / (WAYPOINTS.length - 1)) * wrapperHeight;
+
+              if (freeOrbitActive) {
+                setCinematicScrollMode(true);
+              }
+
+              window.scrollTo({
+                top: targetY,
+                behavior: 'smooth'
+              });
+            });
+
+            container.appendChild(dot);
+          });
+        }
+
+        function setupUserInteractionEvents() {
+          const fsBtn = document.getElementById('fullscreen-btn');
+
+          if (fsBtn) {
+            fsBtn.addEventListener('click', () => {
+              if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch((err) => {
+                  console.error(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+              } else {
+                document.exitFullscreen();
+              }
+            });
+          }
+
+          document.addEventListener('fullscreenchange', () => {
+            if (fsBtn) {
+              if (document.fullscreenElement) {
+                fsBtn.innerText = "Exit Fullscreen";
+              } else {
+                fsBtn.innerText = "View Fullscreen";
+              }
+            }
+          });
+        }
+
+        function setCinematicScrollMode(active) {
+          const scrollWrapper = document.getElementById('scroll-wrapper');
+
+          if (active) {
+            freeOrbitActive = false;
+
+            if (controls) {
+              currentLookAt.copy(controls.target);
+              controls.dispose();
+              controls = null;
+            }
+
+            renderer.domElement.style.touchAction = 'auto';
+            if (renderer.domElement.parentElement) {
+              renderer.domElement.parentElement.style.touchAction = 'auto';
+            }
+
+            if (scrollWrapper) {
+              scrollWrapper.style.opacity = '1';
+              scrollWrapper.style.pointerEvents = 'auto';
+            }
+
+            onPageScroll();
+          } else {
+            freeOrbitActive = true;
+
+            controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.target.copy(currentLookAt);
+            controls.update();
+
+            if (scrollWrapper) {
+              scrollWrapper.style.opacity = '0.15';
+              scrollWrapper.style.pointerEvents = 'none';
+            }
+            showToast("Free Orbit Activated: Drag to rotate");
+          }
+        }
+
+        function setupGSAPInteractivity() {
+          // Interactive 3D physical card tilt on mouse move
+          document.querySelectorAll('.skill-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+              const rect = card.getBoundingClientRect();
+              const x = e.clientX - rect.left;
+              const y = e.clientY - rect.top;
+              const xc = rect.width / 2;
+              const yc = rect.height / 2;
+              
+              const angleX = (yc - y) / 12; 
+              const angleY = (x - xc) / 12;
+
+              gsap.to(card, {
+                rotateX: angleX,
+                rotateY: angleY,
+                transformPerspective: 1000,
+                translateY: -8,
+                duration: 0.3,
+                ease: "power2.out"
+              });
+            });
+
+            card.addEventListener('mouseleave', () => {
+              gsap.to(card, {
+                rotateX: 0,
+                rotateY: 0,
+                translateY: 0,
+                duration: 0.8,
+                ease: "elastic.out(1, 0.4)"
+              });
+            });
+          });
+
+          // Row level active highlights
+          document.querySelectorAll('.skill-row').forEach(row => {
+            const icon = row.querySelector('.tech-icon');
+            const name = row.querySelector('.skill-name');
+            const stars = row.querySelector('.stars-container');
+
+            row.addEventListener('mouseenter', () => {
+              if (icon) {
+                gsap.to(icon, {
+                  scale: 1.25,
+                  rotation: 8,
+                  duration: 0.35,
+                  ease: "back.out(1.7)",
+                  filter: "drop-shadow(0 0 8px rgba(244, 63, 94, 0.85))"
+                });
+              }
+              if (name) {
+                gsap.to(name, {
+                  x: 6,
+                  color: "#fda4af",
+                  duration: 0.3,
+                  ease: "power1.out"
+                });
+              }
+              if (stars) {
+                gsap.to(stars, {
+                  scale: 1.08,
+                  duration: 0.3,
+                  ease: "power1.out"
+                });
+              }
+            });
+
+            row.addEventListener('mouseleave', () => {
+              if (icon) {
+                gsap.to(icon, {
+                  scale: 1.0,
+                  rotation: 0,
+                  duration: 0.5,
+                  ease: "power2.out",
+                  filter: "none"
+                });
+              }
+              if (name) {
+                gsap.to(name, {
+                  x: 0,
+                  color: "#cbd5e1",
+                  duration: 0.4,
+                  ease: "power2.out"
+                });
+              }
+              if (stars) {
+                gsap.to(stars, {
+                  scale: 1.0,
+                  duration: 0.4,
+                  ease: "power2.out"
+                });
+              }
+            });
+          });
+        }
+
+        // Cherry Blossom Spawning & Tree Shake Mechanics
+        function setupCherryCards() {
+          document.querySelectorAll('.skill-card').forEach(card => {
+            const container = document.createElement('div');
+            container.className = 'petal-container';
+            card.appendChild(container);
+
+            let isHovered = false;
+            let tiltX = 0, tiltY = 0;
+            let targetTiltX = 0, targetTiltY = 0;
+            let shakeIntensity = 0; 
+            let time = 0;
+            
+            let lastX = 0;
+            let lastY = 0;
+            let lastTime = Date.now();
+
+            let activeTimeouts = [];
+            let hoverStartTime = 0;
+
+            createRestingPetals(card, container);
+
+            function createRestingPetals(targetCard, targetContainer) {
+              targetContainer.querySelectorAll('.resting-petal').forEach(p => p.remove());
+
+              const cardWidth = targetCard.offsetWidth || 380;
+              const cardHeight = targetCard.offsetHeight || 200;
+
+              const count = Math.floor(Math.random() * 6) + 12; 
+              for (let i = 0; i < count; i++) {
+                const petal = document.createElement('div');
+                petal.className = 'cherry-petal resting-petal fade-in';
+
+                const size = Math.random() * 8 + 7;
+
+                let startX, startY;
+                if (Math.random() < 0.65) {
+                  startX = cardWidth - (Math.random() * 110 + 10);
+                  startY = Math.random() * 45 - 10;
+                } else {
+                  startX = Math.random() * (cardWidth - 40) + 20;
+                  startY = Math.random() * 15 - 10;
+                }
+
+                const restRot = (Math.random() - 0.5) * 120; 
+                const restScale = Math.random() * 0.3 + 0.8; 
+
+                petal.style.width = `${size}px`;
+                petal.style.height = `${size * 1.3}px`;
+                petal.style.left = `${startX}px`;
+                petal.style.top = `${startY}px`;
+                petal.style.setProperty('--rest-rot', `${restRot}deg`);
+                petal.style.setProperty('--rest-scale', `${restScale}`);
+
+                targetContainer.appendChild(petal);
+              }
+            }
+
+            card.addEventListener('mousemove', (e) => {
+              const now = Date.now();
+              const dt = now - lastTime;
+              if (dt > 0) {
+                const dx = e.clientX - lastX;
+                const dy = e.clientY - lastY;
+                const speed = Math.sqrt(dx * dx + dy * dy) / dt;
+
+                if (speed > 0.8) {
+                  shakeIntensity = Math.min(shakeIntensity + speed * 0.3, 1.2);
+                  
+                  const extraSpawns = Math.floor(speed * 3);
+                  for (let i = 0; i < extraSpawns; i++) {
+                    spawnPetal(true);
+                  }
+                }
+
+                lastX = e.clientX;
+                lastY = e.clientY;
+                lastTime = now;
+              }
+
+              const rect = card.getBoundingClientRect();
+              const x = e.clientX - rect.left; 
+              const y = e.clientY - rect.top;  
+              const centerX = rect.width / 2;
+              const centerY = rect.height / 2;
+
+              targetTiltY = ((x - centerX) / centerX) * 10;
+              targetTiltX = ((centerY - y) / centerY) * 10;
+            });
+
+            card.addEventListener('mouseleave', () => {
+              isHovered = false;
+              shakeIntensity = 0;
+              
+              activeTimeouts.forEach(clearTimeout);
+              activeTimeouts = [];
+
+              gsap.to(workspaceModelsGroup.scale, {
+                x: 1.0,
+                y: 1.0,
+                z: 1.0,
+                duration: 0.8,
+                ease: "elastic.out(1, 0.5)"
+              });
+              gsap.to(directionalLight, {
+                intensity: 0.1,
+                duration: 0.5
+              });
+
+              setTimeout(() => {
+                if (!isHovered) {
+                  createRestingPetals(card, container);
+                }
+              }, 850);
+
+              card.style.transform = '';
+              tiltX = 0;
+              tiltY = 0;
+              targetTiltX = 0;
+              targetTiltY = 0;
+            });
+
+            function spawnPetal(isInitialBurst = false) {
+              const petal = document.createElement('div');
+              petal.className = 'cherry-petal';
+
+              const size = Math.random() * 8 + 6; 
+              const startX = Math.random() * card.offsetWidth;
+              const startY = isInitialBurst ? (Math.random() * card.offsetHeight * 0.4) - 15 : Math.random() * 20 - 20;
+              const fallDist = Math.random() * 200 + 400; 
+              const swayDist = (Math.random() - 0.5) * 200; 
+              
+              const rotX = (Math.random() - 0.5) * 1080; 
+              const rotY = (Math.random() - 0.5) * 1080;
+              const rotZ = (Math.random() - 0.5) * 360;
+              
+              const duration = Math.random() * 2.5 + 2.0;
+
+              petal.style.width = `${size}px`;
+              petal.style.height = `${size * 1.3}px`; 
+              petal.style.left = `${startX}px`;
+              petal.style.top = `${startY}px`;
+              petal.style.setProperty('--sway-distance', `${swayDist}px`);
+              petal.style.setProperty('--fall-distance', `${fallDist}px`);
+              petal.style.setProperty('--rot-x', `${rotX}deg`);
+              petal.style.setProperty('--rot-y', `${rotY}deg`);
+              petal.style.setProperty('--rot-z', `${rotZ}deg`);
+              petal.style.animationName = 'fall-and-tumble';
+              petal.style.animationDuration = `${duration}s`;
+              petal.style.animationTimingFunction = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+
+              container.appendChild(petal);
+
+              setTimeout(() => {
+                petal.remove();
+              }, duration * 1000);
+            }
+
+            function triggerSheddingFlow() {
+              if (!isHovered) return;
+
+              const elapsed = Date.now() - hoverStartTime;
+              const probability = Math.exp(-elapsed / 1500); 
+              const delay = 100 + (1 - probability) * 1200; 
+              
+              if (Math.random() < (probability * 0.8 + 0.15)) {
+                spawnPetal(false);
+              }
+
+              const timeoutId = setTimeout(triggerSheddingFlow, delay);
+              activeTimeouts.push(timeoutId);
+            }
+
+            card.addEventListener('mouseenter', (e) => {
+              isHovered = true;
+              hoverStartTime = Date.now();
+              shakeIntensity = 1.0; 
+              
+              lastX = e.clientX;
+              lastY = e.clientY;
+              lastTime = Date.now();
+
+              container.querySelectorAll('.resting-petal').forEach((petal, index) => {
+                petal.classList.remove('fade-in');
+
+                const fallDist = Math.random() * 200 + 400;
+                const swayDist = (Math.random() - 0.5) * 200;
+                const rotX = (Math.random() - 0.5) * 1080;
+                const rotY = (Math.random() - 0.5) * 1080;
+                const rotZ = (Math.random() - 0.5) * 360;
+                const duration = Math.random() * 2.0 + 1.8;
+
+                petal.style.setProperty('--sway-distance', `${swayDist}px`);
+                petal.style.setProperty('--fall-distance', `${fallDist}px`);
+                petal.style.setProperty('--rot-x', `${rotX}deg`);
+                petal.style.setProperty('--rot-y', `${rotY}deg`);
+                petal.style.setProperty('--rot-z', `${rotZ}deg`);
+
+                petal.style.animationName = 'fall-and-tumble';
+                petal.style.animationDuration = `${duration}s`;
+                petal.style.animationTimingFunction = 'cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                petal.style.animationFillMode = 'forwards';
+                petal.style.animationDelay = `${index * 15}ms`;
+
+                setTimeout(() => {
+                  petal.remove();
+                }, (duration + (index * 0.015)) * 1000);
+              });
+
+              triggerSheddingFlow();
+
+              gsap.to(workspaceModelsGroup.scale, {
+                x: 1.08,
+                y: 1.08,
+                z: 1.08,
+                duration: 0.5,
+                ease: "power2.out"
+              });
+              gsap.to(directionalLight, {
+                intensity: 0.35,
+                duration: 0.3
+              });
+              
+              requestAnimationFrame(updateCardPhysics);
+            });
+
+            function updateCardPhysics() {
+              if (!isHovered) return;
+
+              time += 0.1;
+              shakeIntensity *= 0.94; 
+              if (shakeIntensity < 0.01) {
+                shakeIntensity = 0.05; 
+              }
+
+              const freq = 45; 
+              const shakeX = Math.sin(time * freq) * 7 * shakeIntensity;
+              const shakeY = Math.cos(time * (freq * 0.8)) * 5 * shakeIntensity;
+
+              gsap.set(card, {
+                x: shakeX,
+                y: shakeY,
+                z: Math.sin(time) * 10 * shakeIntensity
+              });
+
+              requestAnimationFrame(updateCardPhysics);
+            }
+          });
+        }
+
+        // Handles procedural fallbacks of core nodes
+        function runObjectMicroAnimations(delta) {
+          const model = workspaceModelsGroup.getObjectByName("Procedural_Reactor");
+          if (model) {
+            const elapsed = clock.getElapsedTime();
+            
+            const ring = model.getObjectByName("GlowCoreRing");
+            if (ring) {
+              ring.rotation.y += delta * 0.7;
+              ring.rotation.x += delta * 0.3;
+            }
+
+            const crystal = model.getObjectByName("GlowCoreCrystal");
+            if (crystal) {
+              crystal.rotation.y -= delta * 0.5;
+              crystal.position.y = 1.3 + Math.sin(elapsed * 2.0) * 0.08;
+            }
+          }
+        }
+
+        // Render Frame Loops
+        function animate() {
+          requestAnimationFrame(animate);
+
+          const delta = clock.getDelta();
+
+          updateCameraSpatialInterpolation();
+
+          runObjectMicroAnimations(delta);
+
+          if (freeOrbitActive && controls) {
+            controls.update();
+          } else {
+            camera.lookAt(currentLookAt);
+          }
+
+          renderer.render(scene, camera);
+        }
+
+        function onWindowResize() {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function showToast(message) {
+          const el = document.getElementById('notification-toast');
+          el.innerText = message;
+          el.style.display = 'block';
+          setTimeout(() => {
+            el.style.display = 'none';
+          }, 3000);
+        }
+    </script>
 </body>
 </html>
